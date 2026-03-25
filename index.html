@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nachi ASMR｜囁きの世界へ</title>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d0d14;
+    --card: #1a1a28;
+    --accent: #b89cda;
+    --accent2: #7ec8c8;
+    --gold: #d4b896;
+    --text: #e8e4f0;
+    --muted: #7a7890;
+    --green: #6ec98a;
+  }
+
+  body { background: var(--bg); color: var(--text); font-family: 'Shippori Mincho', serif; min-height: 100vh; overflow-x: hidden; }
+
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 0; opacity: 0.5; }
+
+  .blob { position: fixed; border-radius: 50%; filter: blur(80px); opacity: 0.12; pointer-events: none; z-index: 0; animation: drift 12s ease-in-out infinite alternate; }
+  .blob1 { width: 500px; height: 500px; background: #8b6dca; top: -100px; left: -100px; }
+  .blob2 { width: 400px; height: 400px; background: #5dbdbd; bottom: -80px; right: -80px; animation-delay: -6s; }
+  .blob3 { width: 300px; height: 300px; background: #ca6d8b; top: 40%; left: 60%; animation-delay: -3s; }
+  @keyframes drift { from { transform: translate(0,0) scale(1); } to { transform: translate(30px,20px) scale(1.08); } }
+
+  .wrapper { position: relative; z-index: 1; max-width: 680px; margin: 0 auto; padding: 60px 24px 100px; }
+
+  .badge { display: inline-block; background: linear-gradient(90deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 13px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 20px; }
+
+  h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(38px,8vw,64px); font-weight: 300; line-height: 1.1; letter-spacing: -1px; margin-bottom: 8px; }
+  h1 span { display: block; font-style: italic; font-size: 0.7em; color: var(--accent); letter-spacing: 2px; }
+  .subtitle { font-size: 14px; color: var(--muted); letter-spacing: 2px; margin-bottom: 40px; }
+
+  .avatar-wrap { display: flex; align-items: center; gap: 16px; margin-bottom: 40px; }
+  .avatar { width: 80px; height: 80px; border-radius: 50%; overflow: hidden; flex-shrink: 0; box-shadow: 0 0 20px rgba(184,156,218,0.3); border: 2px solid rgba(184,156,218,0.3); }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; object-position: center center; }
+  .avatar-info .name { font-size: 15px; font-weight: 600; }
+  .avatar-info .role { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  .section-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; }
+
+  /* Waveform */
+
+
+  /* Tracks */
+  .tracks { background: var(--card); border: 1px solid rgba(184,156,218,0.12); border-radius: 12px; overflow: hidden; margin-bottom: 32px; }
+  .track { display: flex; align-items: center; gap: 14px; padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.04); transition: background 0.2s; }
+  .track:last-child { border-bottom: none; }
+  .track:hover { background: rgba(184,156,218,0.06); }
+  .track-num { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 18px; color: var(--muted); width: 24px; text-align: center; flex-shrink: 0; }
+  .play-btn { width: 32px; height: 32px; border-radius: 50%; background: rgba(184,156,218,0.12); border: 1px solid rgba(184,156,218,0.2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 11px; color: var(--accent); cursor: pointer; transition: all 0.2s; user-select: none; }
+  .play-btn:hover { background: var(--accent); color: #000; border-color: var(--accent); }
+  .play-btn.playing { background: #e07070; border-color: #e07070; color: #fff; }
+  .track-info { flex: 1; }
+  .track-title { font-size: 14px; margin-bottom: 3px; }
+  .track-desc { font-size: 12px; color: var(--muted); }
+  .track-time { font-family: 'Cormorant Garamond', serif; font-size: 14px; color: var(--muted); }
+
+  /* Price card */
+  .price-card { background: var(--card); border: 1px solid rgba(184,156,218,0.15); border-radius: 16px; padding: 32px 28px; margin-bottom: 32px; position: relative; overflow: hidden; }
+  .price-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent); }
+  .price-tag { display: flex; align-items: baseline; gap: 6px; margin-bottom: 8px; }
+  .price-amount { font-family: 'Cormorant Garamond', serif; font-size: 56px; font-weight: 300; color: var(--gold); line-height: 1; }
+  .price-amount::after { content: ' pt'; font-size: 22px; color: var(--muted); font-weight: 300; }
+  .price-note { font-size: 12px; color: var(--muted); margin-bottom: 24px; line-height: 1.8; }
+  .includes { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 28px; }
+  .includes li { font-size: 13px; display: flex; align-items: center; gap: 10px; }
+  .includes li::before { content: '✦'; color: var(--accent); font-size: 10px; flex-shrink: 0; }
+  .buy-btn { width: 100%; padding: 18px 24px; background: linear-gradient(135deg, var(--accent), #9b7fd4); border: none; border-radius: 10px; font-family: 'Shippori Mincho', serif; font-size: 17px; font-weight: 600; color: #fff; cursor: pointer; letter-spacing: 3px; transition: transform 0.15s, box-shadow 0.2s, opacity 0.2s; box-shadow: 0 8px 32px rgba(155,127,212,0.35); }
+  .buy-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(155,127,212,0.5); }
+  .buy-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* Testimonials */
+  .testimonials { display: flex; flex-direction: column; gap: 12px; margin-bottom: 40px; }
+  .testi { background: var(--card); border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 16px 20px; }
+  .testi-stars { color: var(--gold); font-size: 13px; margin-bottom: 6px; }
+  .testi-text { font-size: 13px; line-height: 1.8; color: #c0bcd0; margin-bottom: 8px; }
+  .testi-author { font-size: 11px; color: var(--muted); }
+
+  .footer-note { text-align: center; font-size: 11px; color: var(--muted); line-height: 2; margin-top: 40px; opacity: 0.6; }
+
+  /* ── MODALS ── */
+  .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 80; align-items: center; justify-content: center; padding: 24px; backdrop-filter: blur(6px); }
+  .modal-bg.active { display: flex; animation: fadeIn 0.25s ease; }
+
+  /* Processing */
+  .modal-processing { background: var(--card); border: 1px solid rgba(184,156,218,0.2); border-radius: 16px; padding: 48px 40px; text-align: center; max-width: 320px; width: 100%; }
+  .spinner { width: 40px; height: 40px; border: 3px solid rgba(184,156,218,0.15); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 20px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .modal-processing p { font-size: 14px; color: var(--muted); letter-spacing: 2px; }
+
+  /* Fake email */
+  .modal-complete { background: #f5f4f0; border-radius: 12px; max-width: 440px; width: 100%; overflow: hidden; font-family: 'Shippori Mincho', serif; color: #1a1a1a; box-shadow: 0 24px 64px rgba(0,0,0,0.6); }
+  .email-header { background: #1a1a28; padding: 18px 22px; display: flex; align-items: center; gap: 8px; }
+  .email-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .email-dot.r { background: #e07070; }
+  .email-dot.y { background: #d4b896; }
+  .email-dot.g { background: var(--green); }
+  .email-subject { margin-left: 10px; font-size: 12px; color: rgba(255,255,255,0.5); letter-spacing: 0.5px; }
+  .email-body { padding: 26px 26px 20px; }
+  .email-from { font-size: 11px; color: #999; margin-bottom: 3px; }
+  .email-to { font-size: 11px; color: #999; margin-bottom: 18px; }
+  .email-title { font-size: 18px; font-weight: 700; margin-bottom: 14px; color: #111; }
+  .email-text { font-size: 13px; color: #555; line-height: 1.9; margin-bottom: 16px; }
+  .email-divider { border: none; border-top: 1px solid #ddd; margin: 14px 0; }
+  .email-row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px; color: #333; }
+  .email-row .lbl { color: #999; }
+  .email-total { display: flex; justify-content: space-between; font-size: 15px; font-weight: 700; margin-top: 12px; padding-top: 12px; border-top: 2px solid #ccc; }
+  .email-note { font-size: 11px; color: #bbb; margin-top: 18px; line-height: 1.8; }
+  .email-btn-row { padding: 0 26px 26px; display: flex; gap: 10px; margin-top: 4px; }
+  .email-action-btn { flex: 1; padding: 12px; border-radius: 8px; border: none; font-family: 'Shippori Mincho', serif; font-size: 13px; cursor: pointer; font-weight: 600; letter-spacing: 1px; transition: opacity 0.2s; }
+  .email-action-btn:hover { opacity: 0.82; }
+  .email-action-btn.primary { background: #7c5cbf; color: #fff; }
+  .email-action-btn.secondary { background: #e8e4f0; color: #555; }
+
+  /* Reveal */
+  .reveal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.94); z-index: 100; align-items: center; justify-content: center; flex-direction: column; text-align: center; padding: 40px; backdrop-filter: blur(8px); }
+  .reveal.active { display: flex; animation: fadeIn 0.4s ease; }
+  .reveal-emoji { font-size: 76px; margin-bottom: 20px; animation: bounce 0.6s ease 0.2s both; }
+  @keyframes bounce { 0% { transform: scale(0); opacity: 0; } 60% { transform: scale(1.2); } 100% { transform: scale(1); opacity: 1; } }
+  .reveal h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(30px,7vw,52px); font-weight: 300; color: var(--accent); margin-bottom: 14px; animation: slideUp 0.5s ease 0.3s both; }
+  .reveal p { font-size: 15px; color: var(--muted); line-height: 2.2; max-width: 400px; animation: slideUp 0.5s ease 0.4s both; }
+  .april-tag { display: inline-block; margin-top: 18px; padding: 8px 24px; border: 1px solid var(--accent); border-radius: 99px; font-size: 13px; letter-spacing: 3px; color: var(--accent); animation: slideUp 0.5s ease 0.5s both; }
+
+  /* Share */
+  .share-section { margin-top: 26px; animation: slideUp 0.5s ease 0.55s both; max-width: 400px; width: 100%; }
+  .share-label { font-size: 12px; color: var(--muted); margin-bottom: 10px; line-height: 1.9; }
+  .share-box { display: flex; gap: 8px; }
+  .share-url { flex: 1; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 12px; font-size: 11px; color: var(--muted); font-family: monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .copy-btn { background: var(--accent); border: none; border-radius: 8px; padding: 10px 16px; font-family: 'Shippori Mincho', serif; font-size: 13px; font-weight: 600; color: #fff; cursor: pointer; white-space: nowrap; letter-spacing: 1px; transition: background 0.2s; }
+  .copy-btn:hover { background: #c9aee8; }
+  .copy-btn.copied { background: var(--green); }
+  .share-note { font-size: 12px; color: var(--muted); margin-top: 10px; line-height: 1.8; }
+
+  .close-btn { margin-top: 22px; background: none; border: 1px solid rgba(255,255,255,0.12); color: var(--muted); font-family: 'Shippori Mincho', serif; font-size: 13px; padding: 10px 24px; border-radius: 99px; cursor: pointer; letter-spacing: 1px; transition: all 0.2s; animation: slideUp 0.5s ease 0.6s both; }
+  .close-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Confetti */
+  .confetti-piece { position: fixed; border-radius: 2px; opacity: 0; pointer-events: none; z-index: 200; animation: confettiFall linear forwards; }
+  @keyframes confettiFall { 0% { opacity: 1; transform: translateY(-20px) rotate(0deg); } 100% { opacity: 0; transform: translateY(100vh) rotate(720deg); } }
+
+  /* Waveform */
+  .waveform-wrap { display: none; background: var(--card); border: 1px solid rgba(184,156,218,0.15); border-radius: 8px; padding: 10px 16px; margin-bottom: 8px; flex-direction: column; gap: 6px; }
+  .waveform-wrap.active { display: flex; }
+  .waveform-label { font-size: 11px; color: var(--accent); letter-spacing: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .waveform-canvas { width: 100%; height: 15px; display: block; }
+
+  /* Code Gate */
+  #codeGate { position: fixed; inset: 0; background: var(--bg); z-index: 300; display: flex; align-items: center; justify-content: center; padding: 32px; transition: opacity 0.5s ease; }
+  #codeGate.hide { opacity: 0; pointer-events: none; }
+  .gate-box { max-width: 380px; width: 100%; text-align: center; }
+  .gate-icon { font-size: 48px; margin-bottom: 20px; }
+  .gate-title { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 300; color: var(--text); margin-bottom: 10px; }
+  .gate-sub { font-size: 13px; color: var(--muted); margin-bottom: 32px; line-height: 2; letter-spacing: 1px; }
+  .gate-input-wrap { display: flex; gap: 8px; margin-bottom: 10px; }
+  .gate-input { flex: 1; background: var(--card); border: 1px solid rgba(184,156,218,0.2); border-radius: 8px; padding: 14px 16px; font-family: 'Shippori Mincho', serif; font-size: 15px; color: var(--text); letter-spacing: 3px; outline: none; transition: border-color 0.2s; }
+  .gate-input::placeholder { letter-spacing: 1px; font-size: 13px; color: var(--muted); }
+  .gate-input:focus { border-color: var(--accent); }
+  .gate-input.error { border-color: #e07070; animation: shake 0.3s ease; }
+  .gate-submit { background: linear-gradient(135deg, var(--accent), #9b7fd4); border: none; border-radius: 8px; padding: 14px 20px; font-family: 'Shippori Mincho', serif; font-size: 14px; font-weight: 600; color: #fff; cursor: pointer; letter-spacing: 2px; transition: opacity 0.2s; white-space: nowrap; }
+  .gate-submit:hover { opacity: 0.85; }
+  .gate-error { font-size: 12px; color: #e07070; min-height: 18px; letter-spacing: 1px; margin-top: 2px; }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+</style>
+</head>
+<body>
+
+<!-- Code Gate -->
+<div id="codeGate">
+  <div class="gate-box">
+    <div class="gate-title" style="font-size:36px;margin-bottom:14px;">Premium Offer</div>
+    <div class="gate-sub">このページはキャンペーンコードをお持ちの方のみ<br>アクセスできる限定ページです。</div>
+    <div class="gate-input-wrap">
+      <input class="gate-input" id="gateInput" type="text" placeholder="キャンペーンコードを入力" autocomplete="off" onkeydown="if(event.key==='Enter')checkCode()">
+      <button class="gate-submit" onclick="checkCode()">確認</button>
+    </div>
+    <div class="gate-error" id="gateError"></div>
+  </div>
+</div>
+
+<script data-cfasync="false">
+  function checkCode() {
+    var val = document.getElementById('gateInput').value.trim().toLowerCase();
+    var input = document.getElementById('gateInput');
+    var err = document.getElementById('gateError');
+    if (val === 'sasayaki') {
+      var gate = document.getElementById('codeGate');
+      gate.classList.add('hide');
+      setTimeout(function(){ gate.remove(); }, 500);
+    } else {
+      input.classList.add('error');
+      err.textContent = 'コードが正しくありません';
+      setTimeout(function(){ input.classList.remove('error'); }, 400);
+    }
+  }
+
+  function startPurchase() {
+    document.getElementById('buyBtn').disabled = true;
+    document.getElementById('modalProcessing').classList.add('active');
+    setTimeout(function() {
+      document.getElementById('modalProcessing').classList.remove('active');
+      document.getElementById('modalComplete').classList.add('active');
+    }, 2200);
+  }
+
+  function showReveal() {
+    document.getElementById('modalComplete').classList.remove('active');
+    triggerReveal();
+  }
+
+  function triggerReveal() {
+    document.getElementById('reveal').classList.add('active');
+    spawnConfetti();
+  }
+
+  function closeReveal() {
+    document.getElementById('reveal').classList.remove('active');
+    document.getElementById('buyBtn').disabled = false;
+  }
+
+  function copyLink() {
+    navigator.clipboard.writeText(location.href).then(function() {
+      var btn = document.getElementById('copyBtn');
+      btn.textContent = 'コピー済 ✓';
+      btn.classList.add('copied');
+      setTimeout(function(){ btn.textContent = 'コピー'; btn.classList.remove('copied'); }, 2500);
+    });
+  }
+
+  function spawnConfetti() {
+    var colors = ['#b89cda','#7ec8c8','#d4b896','#f4a0b8','#a0d4a0'];
+    for (var i = 0; i < 70; i++) {
+      var el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.style.cssText = 'left:' + (Math.random()*100) + 'vw;background:' + colors[i%colors.length] + ';animation-duration:' + (1.5+Math.random()*2) + 's;animation-delay:' + (Math.random()*0.6) + 's;width:' + (6+Math.random()*8) + 'px;height:' + (6+Math.random()*8) + 'px;';
+      document.body.appendChild(el);
+      el.addEventListener('animationend', function(){ this.remove(); });
+    }
+  }
+
+  var waveAnim = null, activeBtn = null;
+
+  function resizeCanvas() {
+    var canvas = document.getElementById('waveformCanvas');
+    if (!canvas) return;
+    canvas.width = canvas.offsetWidth * devicePixelRatio;
+    canvas.height = canvas.offsetHeight * devicePixelRatio;
+    var ctx = canvas.getContext('2d');
+    ctx.scale(devicePixelRatio, devicePixelRatio);
+  }
+
+  function drawWave(t) {
+    var canvas = document.getElementById('waveformCanvas');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var W = canvas.offsetWidth, H = canvas.offsetHeight;
+    ctx.clearRect(0, 0, W, H);
+    var bars = 40, barW = 3, gap = (W - bars * barW) / (bars - 1);
+    for (var i = 0; i < bars; i++) {
+      var n = Math.sin(i * 0.5 + t * 1.2) * 0.6 + Math.sin(i * 1.1 + t * 0.7) * 0.4;
+      var h = Math.max(4, (0.3 + Math.abs(n) * 0.55) * H);
+      ctx.fillStyle = 'rgba(184,156,218,' + (0.3 + Math.abs(n) * 0.5) + ')';
+      ctx.beginPath();
+      ctx.roundRect(i * (barW + gap), (H - h) / 2, barW, h, 2);
+      ctx.fill();
+    }
+  }
+
+  function playTrack(btn, name) {
+    if (activeBtn === btn) {
+      clearInterval(waveAnim);
+      btn.textContent = '▶';
+      btn.classList.remove('playing');
+      document.getElementById('waveformWrap').classList.remove('active');
+      activeBtn = null;
+      return;
+    }
+    if (activeBtn) { activeBtn.textContent = '▶'; activeBtn.classList.remove('playing'); }
+    clearInterval(waveAnim);
+    activeBtn = btn;
+    btn.textContent = '■';
+    btn.classList.add('playing');
+    document.getElementById('waveformLabel').textContent = name + '  —  NOW PLAYING';
+    document.getElementById('waveformWrap').classList.add('active');
+    setTimeout(resizeCanvas, 10);
+    var t = 0;
+    waveAnim = setInterval(function(){ t += 0.04; drawWave(t); }, 1000 / 24);
+  }
+
+  window.addEventListener('DOMContentLoaded', function() {
+  });
+</script>
+<div class="blob blob2"></div>
+<div class="blob blob3"></div>
+
+<div class="wrapper">
+  <div class="badge">✦ Limited Digital Release ✦</div>
+  <h1>Nachi ASMR<span>囁きの世界へ</span></h1>
+  <p class="subtitle">— Vol.01 : シチュエーションボイス集 —</p>
+
+  <div class="avatar-wrap">
+    <div class="avatar"><img src="avatar.png" alt="Nachi"></div>
+    <div class="avatar-info">
+      <div class="name">Nachi</div>
+      <div class="role">イラストレーター・ASMRアーティスト</div>
+    </div>
+  </div>
+
+  <p class="section-label">収録トラック</p>
+
+  <div class="waveform-wrap" id="waveformWrap">
+    <span class="waveform-label" id="waveformLabel">NOW PLAYING</span>
+    <canvas class="waveform-canvas" id="waveformCanvas"></canvas>
+  </div>
+
+  <div class="tracks">
+    <div class="track">
+      <span class="track-num">01</span>
+      <div class="play-btn" onclick="playTrack(this, '告白ボイス')">▶</div>
+      <div class="track-info">
+        <div class="track-title">告白ボイス</div>
+        <div class="track-desc">「ずっと、好きだった」— 耳元で届く、真剣な囁き</div>
+      </div>
+      <span class="track-time">18:24</span>
+    </div>
+    <div class="track">
+      <span class="track-num">02</span>
+      <div class="play-btn" onclick="playTrack(this, '束縛ボイス')">▶</div>
+      <div class="track-info">
+        <div class="track-title">束縛ボイス</div>
+        <div class="track-desc">「どこにも行かせない」— 息が触れるほど近い囁き</div>
+      </div>
+      <span class="track-time">26:51</span>
+    </div>
+    <div class="track">
+      <span class="track-num">03</span>
+      <div class="play-btn" onclick="playTrack(this, '内緒話ボイス')">▶</div>
+      <div class="track-info">
+        <div class="track-title">内緒話ボイス</div>
+        <div class="track-desc">ふたりだけの秘密、ほとんど声にならない囁き</div>
+      </div>
+      <span class="track-time">31:07</span>
+    </div>
+    <div class="track">
+      <span class="track-num">04</span>
+      <div class="play-btn" onclick="playTrack(this, 'ヤンデレボイス')">▶</div>
+      <div class="track-info">
+        <div class="track-title">ヤンデレボイス</div>
+        <div class="track-desc">「君のことしか、考えられない」— 甘くて危うい独白</div>
+      </div>
+      <span class="track-time">22:39</span>
+    </div>
+    <div class="track">
+      <span class="track-num">05</span>
+      <div class="play-btn" onclick="playTrack(this, 'おやすみボイス')">▶</div>
+      <div class="track-info">
+        <div class="track-title">おやすみボイス</div>
+        <div class="track-desc">眠りに落ちるまで、側にいるよ</div>
+      </div>
+      <span class="track-time">44:15</span>
+    </div>
+  </div>
+
+  <p class="section-label">口コミ</p>
+  <div class="testimonials">
+    <div class="testi">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-text">「束縛ボイスで心臓止まるかと思った。『どこにも行かせない』のところ何回も聴いてる」</div>
+      <div class="testi-author">— ゆのり / 28歳 / デザイナー</div>
+    </div>
+    <div class="testi">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-text">「告白ボイス、普通に泣いた。囁き方が近すぎてイヤホン外しそうになった」</div>
+      <div class="testi-author">— こはる / 24歳 / 会社員</div>
+    </div>
+    <div class="testi">
+      <div class="testi-stars">★★★★☆</div>
+      <div class="testi-text">「R18特典が想像の3倍えぐかった。深夜に聴くものじゃなかった（褒めてます）」</div>
+      <div class="testi-author">— みくる / 31歳 / イラストレーター</div>
+    </div>
+  </div>
+
+  <div class="price-card">
+    <div class="price-tag" style="align-items:center;gap:12px;flex-wrap:wrap;">
+      <span style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:var(--muted);text-decoration:line-through;line-height:1;">3,980円</span>
+      <span style="font-family:'Cormorant Garamond',serif;font-size:56px;font-weight:300;color:var(--gold);line-height:1;">0<span style="font-size:22px;color:var(--muted);font-weight:300;">円</span></span>
+    </div>
+    <div style="display:inline-block;background:rgba(184,156,218,0.15);border:1px solid rgba(184,156,218,0.3);border-radius:99px;padding:5px 14px;font-size:12px;color:var(--accent);letter-spacing:1px;margin-bottom:16px;">🎁 特別キャンペーンコード適用</div>
+    <p class="price-note">ダウンロード販売 / MP3・FLAC同梱<br>特典を適用してすぐにお受け取りいただけます</p>    <ul class="includes">
+      <li>全5トラック シチュエーションボイス（約2時間25分）</li>
+      <li>高音質FLAC + MP3 形式</li>
+      <li>描き下ろしアートブック（PDF / 32P）</li>
+      <li>購入者限定：R18シチュエーションボイス 特別収録（未公開）</li>
+    </ul>
+    <button class="buy-btn" id="buyBtn" onclick="startPurchase()">特典を適用してダウンロード</button>
+  </div>
+
+  <p class="footer-note">安全なクレジットカード・PayPay決済対応<br>ご不明な点はお問い合わせください</p>
+</div>
+
+<!-- Processing Modal -->
+<div class="modal-bg" id="modalProcessing">
+  <div class="modal-processing">
+    <div class="spinner"></div>
+    <p>準備中です…</p>
+  </div>
+</div>
+
+<!-- Fake Email Modal -->
+<div class="modal-bg" id="modalComplete">
+  <div class="modal-complete">
+    <div class="email-header">
+      <div class="email-dot r"></div>
+      <div class="email-dot y"></div>
+      <div class="email-dot g"></div>
+      <span class="email-subject">購入完了のお知らせ — Nachi ASMR Store</span>
+    </div>
+    <div class="email-body">
+      <div class="email-from">From: noreply &lt;nachi-asmr.jp&gt;</div>
+      <div class="email-to">To: あなた</div>
+      <div class="email-title">🎙️ ご購入ありがとうございます！</div>
+      <p class="email-text">この度は「Nachi ASMR Vol.01」をご購入いただき、誠にありがとうございます。ダウンロードの準備が完了しました。</p>
+      <hr class="email-divider">
+      <div class="email-row"><span class="lbl">商品名</span><span>Nachi ASMR Vol.01</span></div>
+      <div class="email-row"><span class="lbl">収録数</span><span>5トラック ＋ R18特典</span></div>
+      <div class="email-row"><span class="lbl">特典</span><span>描き下ろしアートブック</span></div>
+      <div class="email-row"><span class="lbl">注文番号</span><span>#NASMR-0401</span></div>
+      <div class="email-total"><span>合計</span><span style="color:#6ec98a;">0円（特典適用）</span></div>
+      <p class="email-note">ダウンロードリンクの有効期限は72時間です。<br>お問い合わせは DM にてお気軽にどうぞ。</p>
+    </div>
+    <div class="email-btn-row">
+      <button class="email-action-btn primary" onclick="showReveal()">ダウンロードする</button>
+      <button class="email-action-btn secondary" onclick="showReveal()">閉じる</button>
+    </div>
+  </div>
+</div>
+
+<!-- April Fool Reveal -->
+<div class="reveal" id="reveal">
+  <p>
+    4月1日です！<br>
+    案の定このASMRは存在しません！<br>
+    信じてくれてありがとう🐻<br><br>
+    このページまでたどり着いたそこのあなた。<br>
+    ぜひASMRの感想風リプか、<br>好きなお寿司のネタをリプライください。
+  </p>
+  <button class="close-btn" onclick="closeReveal()">ページに戻る</button>
+</div>
+
+
+</body>
+</html>
