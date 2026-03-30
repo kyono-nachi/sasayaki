@@ -220,7 +220,20 @@
   function startPurchase() {
     document.getElementById('buyBtn').disabled = true;
     document.getElementById('modalProcessing').classList.add('active');
+    var messages = ['音声データ転送中…', '特典を梱包中…', '気持ちを込めています…'];
+    var i = 0;
+    var el = document.getElementById('processingText');
+    el.textContent = messages[0];
+    var ticker = setInterval(function() {
+      i++;
+      if (i < messages.length) {
+        el.textContent = messages[i];
+      } else {
+        clearInterval(ticker);
+      }
+    }, 700);
     setTimeout(function() {
+      clearInterval(ticker);
       document.getElementById('modalProcessing').classList.remove('active');
       document.getElementById('modalComplete').classList.add('active');
     }, 2200);
@@ -425,7 +438,7 @@
 <div class="modal-bg" id="modalProcessing">
   <div class="modal-processing">
     <div class="spinner"></div>
-    <p>準備中です…</p>
+    <p id="processingText">音声データ転送中…</p>
   </div>
 </div>
 
