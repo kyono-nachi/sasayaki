@@ -4,6 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nachi ASMR｜囁きの世界へ</title>
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
+<meta property="og:title" content="Nachi ASMR｜囁きの世界へ">
+<meta property="og:description" content="限定公開。招待コードをお持ちの方のみアクセス可能。">
+<meta property="og:image" content="https://kyono-nachi.github.io/sasayaki/icon.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kyono-nachi.github.io/sasayaki/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Nachi ASMR｜囁きの世界へ">
+<meta name="twitter:description" content="限定公開。招待コードをお持ちの方のみアクセス可能。">
+<meta name="twitter:image" content="https://kyono-nachi.github.io/sasayaki/icon.png">
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -120,12 +131,15 @@
   .email-action-btn.secondary { background: #e8e4f0; color: #555; }
 
   /* Reveal */
-  .reveal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.94); z-index: 100; align-items: center; justify-content: center; flex-direction: column; text-align: center; padding: 40px; backdrop-filter: blur(8px); }
+  .reveal { display: none; position: fixed; inset: 0; background: #000; z-index: 100; align-items: center; justify-content: center; flex-direction: column; text-align: center; padding: 40px; }
+  .reveal::before { content: ''; position: absolute; inset: 0; background: url('haikei.png') center center / contain no-repeat; opacity: 0.18; }
+  .reveal::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.1) 40%, rgba(0,0,0,0.1) 60%, rgba(0,0,0,0.7) 100%); }
   .reveal.active { display: flex; animation: fadeIn 0.4s ease; }
+  .reveal > * { position: relative; z-index: 1; }
   .reveal-emoji { font-size: 76px; margin-bottom: 20px; animation: bounce 0.6s ease 0.2s both; }
   @keyframes bounce { 0% { transform: scale(0); opacity: 0; } 60% { transform: scale(1.2); } 100% { transform: scale(1); opacity: 1; } }
   .reveal h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(30px,7vw,52px); font-weight: 300; color: var(--accent); margin-bottom: 14px; animation: slideUp 0.5s ease 0.3s both; }
-  .reveal p { font-size: 15px; color: var(--muted); line-height: 2.2; max-width: 400px; animation: slideUp 0.5s ease 0.4s both; }
+  .reveal p { font-size: 15px; color: #fff; line-height: 2.2; max-width: 400px; animation: slideUp 0.5s ease 0.4s both; }
   .april-tag { display: inline-block; margin-top: 18px; padding: 8px 24px; border: 1px solid var(--accent); border-radius: 99px; font-size: 13px; letter-spacing: 3px; color: var(--accent); animation: slideUp 0.5s ease 0.5s both; }
 
   /* Share */
@@ -178,9 +192,9 @@
 <div id="codeGate">
   <div class="gate-box">
     <div class="gate-title" style="font-size:36px;margin-bottom:14px;">Premium Offer</div>
-    <div class="gate-sub">このページはキャンペーンコードをお持ちの方のみ<br>アクセスできる限定ページです。</div>
+    <div class="gate-sub">このページは招待コードをお持ちの方のみ<br>アクセスできる限定ページです。</div>
     <div class="gate-input-wrap">
-      <input class="gate-input" id="gateInput" type="text" placeholder="キャンペーンコードを入力" autocomplete="off" onkeydown="if(event.key==='Enter')checkCode()">
+      <input class="gate-input" id="gateInput" type="text" placeholder="招待コードを入力" autocomplete="off" onkeydown="if(event.key==='Enter')checkCode()">
       <button class="gate-submit" onclick="checkCode()">確認</button>
     </div>
     <div class="gate-error" id="gateError"></div>
@@ -394,7 +408,7 @@
       <span style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:var(--muted);text-decoration:line-through;line-height:1;">3,980円</span>
       <span style="font-family:'Cormorant Garamond',serif;font-size:56px;font-weight:300;color:var(--gold);line-height:1;">0<span style="font-size:22px;color:var(--muted);font-weight:300;">円</span></span>
     </div>
-    <div style="display:inline-block;background:rgba(184,156,218,0.15);border:1px solid rgba(184,156,218,0.3);border-radius:99px;padding:5px 14px;font-size:12px;color:var(--accent);letter-spacing:1px;margin-bottom:16px;">🎁 特別キャンペーンコード適用</div>
+    <div style="display:inline-block;background:rgba(184,156,218,0.15);border:1px solid rgba(184,156,218,0.3);border-radius:99px;padding:5px 14px;font-size:12px;color:var(--accent);letter-spacing:1px;margin-bottom:16px;">🎁 招待コード適用</div>
     <p class="price-note">ダウンロード販売 / MP3・FLAC同梱<br>特典を適用してすぐにお受け取りいただけます</p>    <ul class="includes">
       <li>全5トラック シチュエーションボイス（約2時間25分）</li>
       <li>高音質FLAC + MP3 形式</li>
@@ -438,8 +452,8 @@
       <p class="email-note">ダウンロードリンクの有効期限は72時間です。<br>お問い合わせは DM にてお気軽にどうぞ。</p>
     </div>
     <div class="email-btn-row">
-      <button class="email-action-btn primary" onclick="showReveal()">ダウンロードする</button>
       <button class="email-action-btn secondary" onclick="showReveal()">閉じる</button>
+      <button class="email-action-btn primary" onclick="showReveal()">ダウンロードする</button>
     </div>
   </div>
 </div>
