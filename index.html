@@ -56,11 +56,17 @@
 
   .section-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
 
-  /* Waveform */
-  .waveform-wrap { display: none; background: var(--card); border: 1px solid rgba(184,156,218,0.15); border-radius: 8px; padding: 10px 16px; margin-bottom: 8px; flex-direction: column; gap: 6px; }
-  .waveform-wrap.active { display: flex; }
-  .waveform-label { font-size: 11px; color: var(--accent); letter-spacing: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .waveform-canvas { width: 100%; height: 15px; display: block; }
+  /* Sample modal */
+  .modal-sample { background: var(--card); border: 1px solid rgba(184,156,218,0.2); border-radius: 16px; max-width: 400px; width: 100%; overflow: hidden; box-shadow: 0 24px 64px rgba(0,0,0,0.6); }
+  .sample-header { background: rgba(184,156,218,0.08); border-bottom: 1px solid rgba(184,156,218,0.12); padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; }
+  .sample-track-name { font-size: 12px; color: var(--accent); letter-spacing: 2px; }
+  .sample-badge { font-size: 10px; color: var(--muted); letter-spacing: 1px; border: 1px solid rgba(255,255,255,0.1); border-radius: 99px; padding: 3px 10px; }
+  .sample-body { padding: 24px 22px; }
+  .sample-text { font-size: 14px; line-height: 2.4; color: var(--text); }
+  .sample-text em { color: var(--muted); font-style: normal; font-size: 11px; }
+  .sample-fade { text-align: center; color: var(--muted); font-size: 12px; letter-spacing: 2px; margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.05); }
+  .sample-close { display: block; width: 100%; padding: 14px; background: none; border: none; border-top: 1px solid rgba(184,156,218,0.1); font-family: 'Shippori Mincho', serif; font-size: 13px; color: var(--muted); cursor: pointer; letter-spacing: 1px; transition: color 0.2s; }
+  .sample-close:hover { color: var(--accent); }
 
   /* Tracks */
   .tracks { background: var(--card); border: 1px solid rgba(184,156,218,0.12); border-radius: 12px; overflow: hidden; margin-bottom: 28px; }
@@ -255,53 +261,18 @@
     }
   }
 
-  var waveAnim = null, activeBtn = null;
-
-  function resizeCanvas() {
-    var canvas = document.getElementById('waveformCanvas');
-    if (!canvas) return;
-    canvas.width = canvas.offsetWidth * devicePixelRatio;
-    canvas.height = canvas.offsetHeight * devicePixelRatio;
-    var ctx = canvas.getContext('2d');
-    ctx.scale(devicePixelRatio, devicePixelRatio);
-  }
-
-  function drawWave(t) {
-    var canvas = document.getElementById('waveformCanvas');
-    if (!canvas) return;
-    var ctx = canvas.getContext('2d');
-    var W = canvas.offsetWidth, H = canvas.offsetHeight;
-    ctx.clearRect(0, 0, W, H);
-    var bars = 40, barW = 3, gap = (W - bars * barW) / (bars - 1);
-    for (var i = 0; i < bars; i++) {
-      var n = Math.sin(i * 0.5 + t * 1.2) * 0.6 + Math.sin(i * 1.1 + t * 0.7) * 0.4;
-      var h = Math.max(4, (0.3 + Math.abs(n) * 0.55) * H);
-      ctx.fillStyle = 'rgba(184,156,218,' + (0.3 + Math.abs(n) * 0.5) + ')';
-      ctx.beginPath();
-      ctx.roundRect(i * (barW + gap), (H - h) / 2, barW, h, 2);
-      ctx.fill();
-    }
-  }
+  var sampleScripts = {
+    '告白ボイス': '「…ねえ、聞いてほしいことがあるんだ。」<br>「ずっと言えなくて。何度も諦めようとして。<br>でもやっぱり、言わないままじゃいられなくて。」<br>「…好きだよ。ずっと、好きだった。<br>笑ってくれてるとき、ぼーっとしてるとき、<br>ぜんぶ、好きだった。」',
+    '束縛ボイス': '「どこ行くの。」<br>「…行かないでって言ったら、やめてくれる？」<br>「ダメだよ。今夜は、どこにも行かせない。<br>ここにいて。私のそばに。<br>…それだけでいいから。」',
+    '内緒話ボイス': '「…ねえ、ちょっとだけ近くに来て。」<br>「これ、ふたりだけの秘密ね。<br>誰にも言っちゃダメだよ。」<br>「…君のこと、ずっと見てた。<br>気づいてた？　気づいてなかったなら、<br>それはそれで、ちょっとくやしいな。」',
+    'ヤンデレボイス': '「…また考えてた。君のことだけ。」<br>「おかしいのかな。でもしょうがないんだ。<br>君のことしか、考えられない。」<br>「ごはん食べてるときも、<br>寝ようとしてるときも、<br>ずっと、君がいる。」',
+    'おやすみボイス': '「…眠れてる？」<br>「そばにいるから、大丈夫だよ。<br>目、閉じて。…ゆっくり、息して。」<br>「今日もよく頑張ったね。<br>えらかったよ、ほんとに。<br>…おやすみ。」'
+  };
 
   function playTrack(btn, name) {
-    if (activeBtn === btn) {
-      clearInterval(waveAnim);
-      btn.textContent = '▶';
-      btn.classList.remove('playing');
-      document.getElementById('waveformWrap').classList.remove('active');
-      activeBtn = null;
-      return;
-    }
-    if (activeBtn) { activeBtn.textContent = '▶'; activeBtn.classList.remove('playing'); }
-    clearInterval(waveAnim);
-    activeBtn = btn;
-    btn.textContent = '■';
-    btn.classList.add('playing');
-    document.getElementById('waveformLabel').textContent = name + '  —  NOW PLAYING';
-    document.getElementById('waveformWrap').classList.add('active');
-    setTimeout(resizeCanvas, 10);
-    var t = 0;
-    waveAnim = setInterval(function(){ t += 0.04; drawWave(t); }, 1000 / 24);
+    document.getElementById('sampleTrackName').textContent = name;
+    document.getElementById('sampleText').innerHTML = sampleScripts[name] || '';
+    document.getElementById('modalSample').classList.add('active');
   }
 
   window.addEventListener('DOMContentLoaded', function() {
@@ -323,12 +294,7 @@
     </div>
   </div>
 
-  <p class="section-label">収録トラック</p>
-
-  <div class="waveform-wrap" id="waveformWrap">
-    <span class="waveform-label" id="waveformLabel">NOW PLAYING</span>
-    <canvas class="waveform-canvas" id="waveformCanvas"></canvas>
-  </div>
+  <p class="section-label">収録内容</p>
 
   <div class="tracks">
     <div class="track">
@@ -413,6 +379,21 @@
   </div>
 
   <p class="footer-note">安全なクレジットカード・PayPay決済対応<br>ご不明な点はお問い合わせください</p>
+</div>
+
+<!-- Sample Script Modal -->
+<div class="modal-bg" id="modalSample">
+  <div class="modal-sample">
+    <div class="sample-header">
+      <span class="sample-track-name" id="sampleTrackName">—</span>
+      <span class="sample-badge">SAMPLE</span>
+    </div>
+    <div class="sample-body">
+      <div class="sample-text" id="sampleText"></div>
+      <div class="sample-fade">… 続きはDL後にお楽しみください</div>
+    </div>
+    <button class="sample-close" onclick="document.getElementById('modalSample').classList.remove('active')">閉じる</button>
+  </div>
 </div>
 
 <!-- Processing Modal -->
