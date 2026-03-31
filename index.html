@@ -195,6 +195,7 @@
     if (val === 'sasayaki') {
       var gate = document.getElementById('codeGate');
       gate.classList.add('hide');
+      document.getElementById('mainContent').style.visibility = 'visible';
       setTimeout(function(){ gate.remove(); }, 500);
     } else {
       input.classList.add('error');
@@ -279,6 +280,7 @@
   window.addEventListener('DOMContentLoaded', function() {
   });
 </script>
+<div id="mainContent" style="visibility:hidden;">
 <div class="blob blob2"></div>
 <div class="blob blob3"></div>
 
@@ -448,6 +450,7 @@
   <button class="close-btn" onclick="closeReveal()">ページに戻る</button>
 </div>
 
+</div><!-- /mainContent -->
 
 </body>
 </html>
